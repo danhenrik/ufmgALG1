@@ -97,11 +97,6 @@ void MergeSort(Client *A, int len)
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
-    {
-        throw "Please insert the test text file.";
-    }
-
     // ==============\/ Criação Estados e Métodos de pagamento \/===
 
     map<string, State> stateMap;
@@ -118,40 +113,22 @@ int main(int argc, char *argv[])
     paymentMap["DEBITO"] = PaymentMethod("DEBIT", 2);
     paymentMap["CREDITO"] = PaymentMethod("CREDIT", 3);
 
-    // ==============\/ Preparação da entrada \/====================
-
-    string filename = argv[1];
-
-    fstream file;
-    file.open(filename, ios::in);
-    if (!file.is_open())
-        throw "Couldn't find file";
-
-    string input;
-
     // ==============\/ Entrada tamanho do grid \/==================
 
     int gridX, gridY;
-    getline(file, input);
-    stringstream ss;
-    ss << input;
-    ss >> gridX >> gridY;
+    cin >> gridX >> gridY;
 
     // ==============\/ Entrada lojas \/============================
 
     int storeCount;
-    getline(file, input);
-    ss << input;
-    ss >> storeCount;
+    cin >> storeCount;
     Store stores[storeCount];
 
     int i = 0;
     while (i < storeCount)
     {
         int stock, cordX, cordY;
-        getline(file, input);
-        ss << input;
-        ss >> stock >> cordX >> cordY;
+        cin >> stock >> cordX >> cordY;
         if (cordX > gridX || cordY > gridY || cordX < 0 || cordY < 0)
             throw "Coordinates either too large or too small for grid";
         stores[i] = Store(i, stock, cordX, cordY);
@@ -161,9 +138,7 @@ int main(int argc, char *argv[])
     // ==============\/ Entrada clientes \/=========================
 
     int clientCount;
-    getline(file, input);
-    ss << input;
-    ss >> clientCount;
+    cin >> clientCount;
     Client clients[clientCount];
 
     i = 0;
@@ -171,9 +146,7 @@ int main(int argc, char *argv[])
     {
         int age, cordX, cordY;
         string stateName, paymentName;
-        getline(file, input);
-        stringstream ss(input);
-        ss >> age >> stateName >> paymentName >> cordX >> cordY;
+        cin >> age >> stateName >> paymentName >> cordX >> cordY;
         State state = stateMap.at(stateName);
         PaymentMethod paymentMethod = paymentMap.at(paymentName);
         if (cordX > gridX || cordY > gridY || cordX < 0 || cordY < 0)
@@ -181,8 +154,6 @@ int main(int argc, char *argv[])
         clients[i] = Client(i, age, state, paymentMethod, cordX, cordY);
         i++;
     }
-
-    file.close();
 
     // ==============\/ Criação listas de prioridade lojas \/=======
 
@@ -251,7 +222,7 @@ int main(int argc, char *argv[])
             }
             j++;
             // Caso passem todos os clientes e nenhum aceite a loja, isso significa que esta loja
-            // não esta nas preferências de mais ninguem, e como o cliente n vai descer na sua 
+            // não esta nas preferências de mais ninguem, e como o cliente n vai descer na sua
             // prioridade, essa é uma loja considerada completa.
             if (j == clientCount)
                 store->setFinished();
